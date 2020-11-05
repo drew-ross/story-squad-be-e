@@ -5,7 +5,7 @@ const { points, faceoff } = require('./gameHelpers');
 /**
  * Takes a child ID and returns the child's current squad
  * @param {number} ChildID unique integer id of a child
- * @returns {Promise} returns a promise that resovles to an ID
+ * @returns {Promise} returns a promise that resolves to an ID
  */
 const getSquadIDFromChildID = (ChildID) => {
   return db('Squads AS S')
