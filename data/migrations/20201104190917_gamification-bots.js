@@ -8,13 +8,8 @@ exports.up = function (knex) {
             .references('Children.ID')
             .onUpdate('CASCADE')
             .onDelete('RESTRICT')
-        t.string('Child_Name')
-            .notNullable()
-            .unsigned()
-            .references('Children.Name')
-            .onUpdate('CASCADE')
-            .onDelete('RESTRICT')
-    })
+        
+    });
 };
 
 exports.down = function (knex) {
