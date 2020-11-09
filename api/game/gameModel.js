@@ -59,7 +59,20 @@ const getFaceoffsForSquad = (SquadID) => {
     try {
       // Get the faceoffs from the Faceoffs table in the db
       const faceoffs = await faceoff.getSubIdsForFaceoffs(trx, SquadID);
-      if (faceoffs.length <= 0) throw new Error('NotFound');
+      
+      // Check the length of faceoffs if it is less than 0 return an error
+      if (faceoffs.length <= 0) { 
+        throw new Error('NotFound');
+        // if the length is less than 4 
+        // return the difference between the length and 4
+        // the number of ghost users to add is the difference 
+        // between the length and 4
+      } else {
+        if (faceoffs.length < 4) {
+          
+        }
+
+      }
       // Add submission data to the faceoffs pulled from the DB
       await faceoff.addSubmissionsToFaceoffs(trx, faceoffs);
 
