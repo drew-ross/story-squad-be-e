@@ -1,10 +1,10 @@
 exports.up = function (knex) {
     return knex.schema
         .table('Writing', (t) => {
-            t.specificType('Emoji', 'TEXT[]');
+            t.text('Emoji');
         })
         .table('Drawing', (t) => {
-            t.specificType('Emoji', 'TEXT[]');
+            t.text('Emoji');
         })
 };
   
