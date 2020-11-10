@@ -116,7 +116,11 @@ const submitVote = (vote) => {
     try {
       const { Vote, MemberID, FaceoffID, subEmojis1, subEmojis2 } = vote;
       const returning = await trx('Votes').insert({ Vote, MemberID, FaceoffID }).returning('ID');
-
+      const faceoff = await trx('Faceoffs').select("*").where({ ID: FaceoffID }).first();
+      let faceoffType = faceoff.Type;
+      faceoffType = "WRITING" ? "Writing" : "Drawing";
+      await trx(faceoffType).update({ Emoji: subEmojis1 }).where({ SubmissionID: faceoff.SubmissionID1 });
+      await trx(faceoffType).update({ Emoji: subEmojis2 }).where({ SubmissionID: faceoff.SubmissionID2 });
       return returning;
     } catch (error) {
       console.log(error);
