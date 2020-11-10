@@ -1,10 +1,10 @@
 exports.up = function (knex) {
     return knex.schema
         .table('Writing', (t) => {
-            t.text('Emoji');
+            t.text('Emoji').defaultTo("");
         })
         .table('Drawing', (t) => {
-            t.text('Emoji');
+            t.text('Emoji').defaultTo("");
         })
 };
   
