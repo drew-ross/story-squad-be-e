@@ -119,8 +119,14 @@ const submitVote = (vote) => {
       const faceoff = await trx('Faceoffs').select("*").where({ ID: FaceoffID }).first();
       let faceoffType = faceoff.Type;
       faceoffType = "WRITING" ? "Writing" : "Drawing";
-      await trx(faceoffType).update({ Emoji: subEmojis1 }).where({ SubmissionID: faceoff.SubmissionID1 });
-      await trx(faceoffType).update({ Emoji: subEmojis2 }).where({ SubmissionID: faceoff.SubmissionID2 });
+      const emojis1 = await trx(faceoffType).select('Emoji').where({ SubmissionID: faceoff.SubmissionID1 }).first().Emoji;
+      const emojis2 = await trx(faceoffType).select('Emoji').where({ SubmissionID: faceoff.SubmissionID2 }).first().Emoji;
+      console.log(emojis1);
+      console.log(emojis2);
+      const emojiToReturn1 = emojis1 ? subEmojis1 + emojis1 : subEmojis1;
+      const emojiToReturn2 = emojis2 ? subEmojis2 + emojis2 : subEmojis2;
+      await trx(faceoffType).update({ Emoji: emojiToReturn1 }).where({ SubmissionID: faceoff.SubmissionID1 });
+      await trx(faceoffType).update({ Emoji: emojiToReturn2 }).where({ SubmissionID: faceoff.SubmissionID2 });
       return returning;
     } catch (error) {
       console.log(error);
