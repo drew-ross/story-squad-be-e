@@ -110,8 +110,18 @@ const getVotesBySquad = (SquadID, MemberID) => {
  * @param {number} vote.MemberID the unique integer ID of the member voting
  * @returns {Promise} returns a promise that resolves to the newly created Vote ID
  */
+
 const submitVote = (vote) => {
-  return db('Votes').insert(vote).returning('ID');
+  return db.transaction(async (trx) => {
+    try {
+      const { Vote, MemberID, FaceoffID, subEmojis1, subEmojis2 } = vote;
+      const returning = await trx('Votes').insert({ Vote, MemberID, FaceoffID }).returning('ID');
+
+      return returning;
+    } catch (error) {
+      console.log(error);
+    }
+  })
 };
 
 /**
