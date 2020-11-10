@@ -69,7 +69,11 @@ const getFaceoffsForSquad = (SquadID) => {
         // between the length and 4
       } else {
         if (faceoffs.length < 4) {
-          
+          const faceoffLengthDifference = (4 - faceoffs.length);
+
+          // generate the ghost users and add the number of ghost users
+          // equal to the value of faceoffLengthDifference
+     
         }
 
       }
