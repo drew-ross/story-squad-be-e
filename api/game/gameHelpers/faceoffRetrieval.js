@@ -4,22 +4,26 @@ const { dbOps, formatSubForMatchups } = require('../../../lib');
  * This function queries the database for a list of faceoffs for a given squad with emoji feedback for all submissions.
  * @param {Object} conn knex client connection
  * @param {number} SquadID unique integer squad id
+ * @param {number} ChildID (optional) unique integer child id, for getting emoji feedback for a given child
  * @returns {Promise} returns a promise that resolves to a list of Faceoff objects
  */
-const getSubIdsForFaceoffs = async (conn, SquadID) => {
-  const faceoffs = await conn('Faceoffs AS F')
+const getSubIdsForFaceoffs = async (conn, SquadID, ChildID = null) => {
+  let faceoffs = await conn('Faceoffs AS F')
     .join('Squads AS S', 'S.ID', 'F.SquadID')
     .where('S.ID', SquadID)
     .select('F.*')
     .orderBy('F.Points', 'desc')
     .orderBy('F.ID', 'asc');
-  const faceoffsWithEmojis = Promise.all(faceoffs.map(async faceoff => {
-    const faceoffType = (faceoff.Type === "WRITING") ? "Writing" : "Drawing";
-    faceoff.Emojis1 = await conn(faceoffType).where({ SubmissionID: faceoff.SubmissionID1 }).select("Emoji").first();
-    faceoff.Emojis2 = await conn(faceoffType).where({ SubmissionID: faceoff.SubmissionID2 }).select("Emoji").first();
-    return faceoff;
-  }));
-  return faceoffsWithEmojis;
+  // if a ChildID is supplied, attach emoji feedback for this child's submissions
+  if (ChildID) {
+    faceoffs = Promise.all(faceoffs.map(async faceoff => {
+      const faceoffType = (faceoff.Type === "WRITING") ? "Writing" : "Drawing";
+      faceoff.Emojis1 = await conn(faceoffType).where({ SubmissionID: faceoff.SubmissionID1 }).where({ ChildID }).select("Emoji").first();
+      faceoff.Emojis2 = await conn(faceoffType).where({ SubmissionID: faceoff.SubmissionID2 }).where({ ChildID }).select("Emoji").first();
+      return faceoff;
+    }));
+  }
+  return faceoffs;
 };
 
 /**
