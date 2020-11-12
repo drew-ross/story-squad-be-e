@@ -1,13 +1,12 @@
+const faker = require('faker');
+
+const Ghost_Users = [...new Array(3).map(() => ({
+  points: `${faker.random.number({ min: 0, max: 25 })}`,
+  // idx may need to be changed later to better reflect actual Squad IDs
+  SquadID: idx, 
+}))];
 
 exports.seed = function(knex) {
-  // Deletes ALL existing entries
-  return knex('Ghost_Users').truncate()
-    .then(function () {
-      // Inserts seed entries
-      return knex('Ghost_Users').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
-      ]);
-    });
+      knex('Ghost_Users').insert(Ghost_Users);
+      
 };
