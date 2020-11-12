@@ -49,6 +49,17 @@ const assignPoints = (points) => {
   return db('Points').insert(points).returning('ID');
 };
 
+// TODO Add documentation
+const getSquadIDForBots = (SquadID) => {
+  return db('Submissions as Sub')
+    .join('Squads as S', 'Sub.ID', '=', 'S.ID' )
+    .whereNot({
+      ID: SquadID
+    })
+    .select('S.ID')
+}
+
+
 /**
  * This query returns the matchups for a given squad.
  * @param {number} SquadID unique integer ID of the squad to retrieve data for
@@ -59,9 +70,9 @@ const getFaceoffsForSquad = (SquadID) => {
     try {
       // Get the faceoffs from the Faceoffs table in the db
       const faceoffs = await faceoff.getSubIdsForFaceoffs(trx, SquadID);
-      
+
       // Check the length of faceoffs if it is less than 0 return an error
-      if (faceoffs.length <= 0) { 
+      if (faceoffs.length <= 0) {
         throw new Error('NotFound');
         // if the length is less than 4 
         // return the difference between the length and 4
@@ -73,7 +84,10 @@ const getFaceoffsForSquad = (SquadID) => {
 
           // generate the ghost users and add the number of ghost users
           // equal to the value of faceoffLengthDifference
-     
+          for (let i = 0; i <= faceoffLengthDifference; i++) {
+            getSquadIDForBots(SquadID)
+          }
+
         }
 
       }
