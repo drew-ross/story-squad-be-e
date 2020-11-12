@@ -9,7 +9,7 @@ exports.up = function (knex) {
       .references('Squads.ID')
       .onUpdate('CASCADE')
       .onDelete('RESTRICT');
-  });
+  })
   .createTable('Bot_Submissions', (t) => {
     t.increments('ID');
     t.integer('ChildID')
@@ -21,14 +21,14 @@ exports.up = function (knex) {
     t.integer('Bot_StoryID')
       .notNullable()
       .unsigned()
-      .references('Bot_Stories.ID')
+      .references('Stories.ID')
       .onUpdate('CASCADE')
       .onDelete('RESTRICT');
     t.boolean('HasRead').defaultTo(false);
     t.boolean('HasWritten').defaultTo(false);
     t.boolean('HasDrawn').defaultTo(false);
     t.integer('Complexity');
-    t.unique(['ChildID', 'StoryID']);
+    t.unique(['ChildID', 'Bot_StoryID']);
   })
   .createTable('Bot_Writing', (t) => {
     t.increments('ID');
