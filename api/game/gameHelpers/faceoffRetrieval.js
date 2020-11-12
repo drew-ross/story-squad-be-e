@@ -18,8 +18,16 @@ const getSubIdsForFaceoffs = async (conn, SquadID, ChildID = null) => {
   if (ChildID) {
     faceoffs = Promise.all(faceoffs.map(async faceoff => {
       const faceoffType = (faceoff.Type === "WRITING") ? "Writing" : "Drawing";
-      faceoff.Emojis1 = await conn(faceoffType).where({ SubmissionID: faceoff.SubmissionID1 }).where({ ChildID }).select("Emoji").first();
-      faceoff.Emojis2 = await conn(faceoffType).where({ SubmissionID: faceoff.SubmissionID2 }).where({ ChildID }).select("Emoji").first();
+      faceoff.Emojis1 = await conn(`${faceoffType} AS T`)
+        .join("Submissions AS S", "S.ID", "T.SubmissionID")
+        .where("S.ID", faceoff.SubmissionID1)
+        .where("S.ChildID", ChildID)
+        .select("T.Emoji").first();
+      faceoff.Emojis2 = await conn(`${faceoffType} AS T`)
+        .join("Submissions AS S", "S.ID", "T.SubmissionID")
+        .where("S.ID", faceoff.SubmissionID2)
+        .where("S.ChildID", ChildID)
+        .select("T.Emoji").first();
       return faceoff;
     }));
   }
