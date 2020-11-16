@@ -49,7 +49,14 @@ const assignPoints = (points) => {
   return db('Points').insert(points).returning('ID');
 };
 
-// TODO Add documentation
+/**
+ * The goal of this query is to get all the 
+ * submissions from the entire database, join
+ * the squads table and submissions table together
+ * only adding submissions from squads that are not 
+ * in the current squad
+ * @param {number} SquadID 
+ */
 const getSquadIDForBots = (SquadID) => {
   return db('Submissions as Sub')
     .join('Squads as S', 'Sub.ID', '=', 'S.ID' )
