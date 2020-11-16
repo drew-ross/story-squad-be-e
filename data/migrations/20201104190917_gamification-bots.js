@@ -1,4 +1,11 @@
-
+/**
+ * This migration is meant to create the tables needed 
+ * for the Ghost_Users feature in the event that there 
+ * are less than 4 users in a faceoff.
+ * 
+ * The idea was to use the same data that was used for
+ * a normal faceoff (found in the 20201012104127_gamification-3.js migration file) 
+ */
 exports.up = function (knex) {
   return knex.schema.createTable('Ghost_Users', (t) => {
     t.increments('ID');
