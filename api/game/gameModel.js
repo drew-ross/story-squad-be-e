@@ -56,6 +56,7 @@ const assignPoints = (points) => {
  * only adding submissions from squads that are not 
  * in the current squad
  * @param {number} SquadID 
+ * @returns {Promise} returns a problems that resolves to an ID
  */
 const getSquadIDForBots = (SquadID) => {
   return db('Submissions as Sub')
