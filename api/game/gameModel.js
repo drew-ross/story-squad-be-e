@@ -5,7 +5,7 @@ const { points, faceoff } = require('./gameHelpers');
 /**
  * Takes a child ID and returns the child's current squad
  * @param {number} ChildID unique integer id of a child
- * @returns {Promise} returns a promise that resovles to an ID
+ * @returns {Promise} returns a promise that resolves to an ID
  */
 const getSquadIDFromChildID = (ChildID) => {
   return db('Squads AS S')
@@ -50,6 +50,25 @@ const assignPoints = (points) => {
 };
 
 /**
+ * The goal of this query is to get all the 
+ * submissions from the entire database, join
+ * the squads table and submissions table together
+ * only adding submissions from squads that are not 
+ * in the current squad
+ * @param {number} SquadID 
+ * @returns {Promise} returns a problems that resolves to an ID
+ */
+const getSquadIDForBots = (SquadID) => {
+  return db('Submissions as Sub')
+    .join('Squads as S', 'Sub.ID', '=', 'S.ID' )
+    .whereNot({
+      ID: SquadID
+    })
+    .select('S.ID')
+}
+
+
+/**
  * This query returns the matchups for a given squad.
  * @param {number} SquadID unique integer ID of the squad to retrieve data for
  * @param {number} ChildID (optional) unique integer ID of the child to retrieve emoji feedback for
@@ -59,8 +78,31 @@ const getFaceoffsForSquad = (SquadID, ChildID = null) => {
   return db.transaction(async (trx) => {
     try {
       // Get the faceoffs from the Faceoffs table in the db
+ 
       const faceoffs = await faceoff.getSubIdsForFaceoffs(trx, SquadID, ChildID);
-      if (faceoffs.length <= 0) throw new Error('NotFound');
+
+      // Check the length of faceoffs if it is less than 0 return an error
+      if (faceoffs.length <= 0) {
+        throw new Error('NotFound');
+        // if the length is less than 4 
+        // return the difference between the length and 4
+        // the number of ghost users to add is the difference 
+        // between the length and 4
+      } else {
+        if (faceoffs.length < 4) {
+          const faceoffLengthDifference = (4 - faceoffs.length);
+
+          // generate the ghost users and add the number of ghost users
+          // equal to the value of faceoffLengthDifference
+          for (let i = 0; i <= faceoffLengthDifference; i++) {
+            getSquadIDForBots(SquadID)
+          }
+
+        }
+
+      }
+
+      
       // Add submission data to the faceoffs pulled from the DB
       await faceoff.addSubmissionsToFaceoffs(trx, faceoffs);
 

@@ -49,6 +49,7 @@ exports.up = function (knex) {
         .references('Faceoffs.ID')
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
+      t.boolean('Ghost_User').notNullable();
     });
 };
 
