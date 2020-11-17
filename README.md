@@ -79,3 +79,9 @@ There are 3 options to get postgresql installed locally [Choose one]:
 - The S3 upload middleware was designed to play nicely with the frontend UploadDocs component
 - Many of the database queries use `knex.transaction()`, something we didn't see in our time at Lambda
 - Endpoint request/response data is thoroughly documented using swagger, so once the server is running make sure to check out `localhost:8000/api-docs` to see all server capabilities
+
+
+## In Progress:
+
+- The Remainder Problem
+  - [A brief video describing what i have done so far](https://youtu.be/vsy0d34malc)
