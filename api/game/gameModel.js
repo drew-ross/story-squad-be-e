@@ -71,13 +71,15 @@ const getSquadIDForBots = (SquadID) => {
 /**
  * This query returns the matchups for a given squad.
  * @param {number} SquadID unique integer ID of the squad to retrieve data for
+ * @param {number} ChildID (optional) unique integer ID of the child to retrieve emoji feedback for
  * @returns {Array} returns an array of 4 faceoffs that will be documented in swagger
  */
-const getFaceoffsForSquad = (SquadID) => {
+const getFaceoffsForSquad = (SquadID, ChildID = null) => {
   return db.transaction(async (trx) => {
     try {
       // Get the faceoffs from the Faceoffs table in the db
-      const faceoffs = await faceoff.getSubIdsForFaceoffs(trx, SquadID);
+ 
+      const faceoffs = await faceoff.getSubIdsForFaceoffs(trx, SquadID, ChildID);
 
       // Check the length of faceoffs if it is less than 0 return an error
       if (faceoffs.length <= 0) {
@@ -99,6 +101,8 @@ const getFaceoffsForSquad = (SquadID) => {
         }
 
       }
+
+      
       // Add submission data to the faceoffs pulled from the DB
       await faceoff.addSubmissionsToFaceoffs(trx, faceoffs);
 
