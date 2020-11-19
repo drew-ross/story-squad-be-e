@@ -85,3 +85,5 @@ There are 3 options to get postgresql installed locally [Choose one]:
 
 - The Remainder Problem
   - [A brief video describing what i have done so far](https://youtu.be/vsy0d34malc)
+- Performance Improvements Needed on Getting Emojis, Add Real-Time Notifications
+  - [Document](https://docs.google.com/document/d/1oz9DDKk4MLd9JbV6A4gtTvM6W0gvZn776YJ54X1BOcw/edit?usp=sharing)
